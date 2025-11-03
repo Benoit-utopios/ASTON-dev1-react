@@ -20,11 +20,12 @@ function App() {
     objectID: 1,
   },
 ];
+  const [searchTerm, setSearchTerm] = useState('')
 
   // A - Fonction définie dans App
   const handleSearch = (event) => {
     // D - Recevoir la valeur de Search
-    console.log(event.target.value);
+    setSearchTerm(event.target.value)
   }
 
   return (
@@ -33,26 +34,16 @@ function App() {
       {/* B - Passage de la fonction en props */}
       <Search onSearch={handleSearch} />
       <hr />
-      <List list={stories}/>
+      <List filter={searchTerm} list={stories}/>
     </div>
   )
 }
 
 const Search = (props) => {
-  const [searchTerm, setSearchTerm] = useState('')
-
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
-    // C - Execution callback transmis par l'app
-    props.onSearch(event);
-
-  }
-
   return (
       <div>
         <label htmlFor="search">Search: </label>
-        <input id="search" type="text" onChange={handleChange} />
-        <p>Searching for <strong>{searchTerm}</strong></p>
+        <input id="search" type="text" onChange={props.onSearch} />
       </div>
   )
 }
