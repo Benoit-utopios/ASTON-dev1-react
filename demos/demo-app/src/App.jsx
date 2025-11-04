@@ -1,5 +1,13 @@
 import './App.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+// function useStorageState(key, initialState) {
+//   const [value, setValue] = useState(localStorage.getItem(key) || initialState)
+
+//   useEffect(() => {localStorage.setItem(key, value)}, [key, value])
+
+//   return [value, setValue]
+// }
 
 function App() {
   const stories = [
@@ -20,35 +28,61 @@ function App() {
     objectID: 1,
   },
 ];
-  const [searchTerm, setSearchTerm] = useState('')
+
+  // const [searchTerm, setSearchTerm] = useStorageState("search", "React");
+
+  const [searchTerm, setSearchTerm] = useState(localStorage.getItem("search") ?? "React")
 
   const searchedStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  // A - Fonction définie dans App
-  const handleSearch = (event) => {
-    // D - Recevoir la valeur de Search
-    setSearchTerm(event.target.value)
-  }
+  useEffect(() => {
+    localStorage.setItem("search", searchTerm);
+  }, [searchTerm]); // <- dépendance: l'effet rejoue quand searchTerm change
+
+  const handleSearch = (e) => setSearchTerm(e.target.value)
 
   return (
-    <div>
+    <main>
       <h1>Mes technologies</h1>
-      {/* B - Passage de la fonction en props */}
-      <Search onSearch={handleSearch} />
+      <InputWithLabel
+        id="search"
+        label="Search"
+        search={searchTerm} 
+        onSearch={handleSearch} 
+      />
+      <InputWithLabel
+        id="author"
+        label="author"
+        search={searchTerm} 
+        onSearch={handleSearch} 
+      />
+      <InputWithLabel
+        id="date"
+        label="date"
+        search={searchTerm} 
+        onSearch={handleSearch} 
+      />
+      <InputWithLabel
+        id="edition"
+        label="edition"
+        search={searchTerm} 
+        onSearch={handleSearch} 
+      />
       <hr />
       <List  list={searchedStories}/>
-    </div>
+    </main>
   )
 }
 
-const Search = (props) => {
+const InputWithLabel = ({id, label, search, onSearch}) => {
   return (
-      <div>
-        <label htmlFor="search">Search: </label>
-        <input id="search" type="text" onChange={props.onSearch} />
-      </div>
+      <>
+        <label htmlFor={id}>{label}</label>
+        <input id={id} type="text" value={search} onChange={onSearch} />
+        <p>Recherche: <strong>{search}</strong></p>
+      </>
   )
 }
 
