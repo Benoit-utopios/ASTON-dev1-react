@@ -22,6 +22,10 @@ function App() {
 ];
   const [searchTerm, setSearchTerm] = useState('')
 
+  const searchedStories = stories.filter((story) =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   // A - Fonction définie dans App
   const handleSearch = (event) => {
     // D - Recevoir la valeur de Search
@@ -34,7 +38,7 @@ function App() {
       {/* B - Passage de la fonction en props */}
       <Search onSearch={handleSearch} />
       <hr />
-      <List filter={searchTerm} list={stories}/>
+      <List  list={searchedStories}/>
     </div>
   )
 }
@@ -55,8 +59,8 @@ const List = ({ list }) =>
       return (
         <Item key={item.objectID} item={item}/>
       )
-    })}
-  </ul>
+    })}  
+    </ul>
 )
 
 const Item = ({ item }) =>
